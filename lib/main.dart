@@ -1,11 +1,14 @@
+import 'package:agendamento_mecanica/screen/TelaCadastro.dart';
+import 'package:agendamento_mecanica/screen/TelaInicial.dart';
+import 'package:agendamento_mecanica/screen/TelaLogin.dart';
+import 'package:agendamento_mecanica/screen/TelaPerfil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 import 'RotasProjeto.dart';
-import 'TelaCadastro.dart';
-import 'TelaLogin.dart';
+
 
 Future<void> main()  async {
     runApp(
@@ -36,6 +39,8 @@ class _ProjetoAgendamentoState extends State<ProjetoAgendamento> {
       getPages: [
         GetPage(name: RotasProjeto.INICIAL, page: () => TelaLogin()),
         GetPage(name: RotasProjeto.TELA_CADASTRO, page: () => TelaCadastro()),
+        GetPage(name: RotasProjeto.TELA_INICIAL, page: () => TelaInicial()),
+        GetPage(name: RotasProjeto.TELA_PERFIL, page: () => TelaPerfil()),
       ],
       home: TelaLogin(),
     );

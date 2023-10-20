@@ -16,7 +16,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black, // Fundo preto
+      backgroundColor: Colors.black,
       body: Column(
         children: [
                     Container(
@@ -25,10 +25,10 @@ class _TelaCadastroState extends State<TelaCadastro> {
             child: IconButton(
               icon: Icon(
                 Icons.arrow_back,
-                color: Colors.orange, // Ícone de voltar laranja
+                color: Colors.orange,
               ),
               onPressed: () {
-                Navigator.pop(context); // Voltar para a tela de login
+                Navigator.pop(context);
               },
             ),
           ),
@@ -42,20 +42,20 @@ class _TelaCadastroState extends State<TelaCadastro> {
                   'Cadastro',
                   style: TextStyle(
                     color: Colors.orange,
-                    fontSize: 36, // Tamanho maior do título
+                    fontSize: 36,
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Container(
-                  width: MediaQuery.of(context).size.width * 0.3, // 30% da largura da tela
+                  width: MediaQuery.of(context).size.width * 0.3,
                   child: TextFormField(
                     controller: _nomeController,
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Nome',
-                      labelStyle: TextStyle(color: Colors.orange), // Texto do rótulo em laranja
+                      labelStyle: TextStyle(color: Colors.orange),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.orange),
                       ),
@@ -69,13 +69,13 @@ class _TelaCadastroState extends State<TelaCadastro> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Container(
-                  width: MediaQuery.of(context).size.width * 0.3, // 30% da largura da tela
+                  width: MediaQuery.of(context).size.width * 0.3,
                   child: TextFormField(
                     controller: _emailController,
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Email',
-                      labelStyle: TextStyle(color: Colors.orange), // Texto do rótulo em laranja
+                      labelStyle: TextStyle(color: Colors.orange),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.orange),
                       ),
@@ -89,14 +89,14 @@ class _TelaCadastroState extends State<TelaCadastro> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Container(
-                  width: MediaQuery.of(context).size.width * 0.3, // 30% da largura da tela
+                  width: MediaQuery.of(context).size.width * 0.3,
                   child: TextFormField(
                     controller: _senhaController,
                     style: TextStyle(color: Colors.white),
-                    obscureText: !_senhaVisivel, // Altera a visibilidade da senha
+                    obscureText: !_senhaVisivel,
                     decoration: InputDecoration(
                       labelText: 'Senha',
-                      labelStyle: TextStyle(color: Colors.orange), // Texto do rótulo em laranja
+                      labelStyle: TextStyle(color: Colors.orange),
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.orange),
                       ),
@@ -120,14 +120,14 @@ class _TelaCadastroState extends State<TelaCadastro> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  // Lógica de cadastro aqui
+
                 },
                 child: Text(
                   'Cadastrar',
                   style: TextStyle(color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.orange, // Cor laranja
+                  primary: Colors.orange,
                 ),
               ),
             ],
