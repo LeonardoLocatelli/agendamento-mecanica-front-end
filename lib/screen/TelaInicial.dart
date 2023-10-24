@@ -65,7 +65,7 @@ class BottomNavBar extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.add),
             onPressed: () {
-
+              Get.toNamed(RotasProjeto.TELA_CADASTRO_SERVICO);
             },
           ),
           IconButton(

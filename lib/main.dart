@@ -1,4 +1,5 @@
 import 'package:agendamento_mecanica/screen/TelaCadastro.dart';
+import 'package:agendamento_mecanica/screen/TelaCadastroServico.dart';
 import 'package:agendamento_mecanica/screen/TelaInicial.dart';
 import 'package:agendamento_mecanica/screen/TelaLogin.dart';
 import 'package:agendamento_mecanica/screen/TelaPerfil.dart';
@@ -41,6 +42,8 @@ class _ProjetoAgendamentoState extends State<ProjetoAgendamento> {
         GetPage(name: RotasProjeto.TELA_CADASTRO, page: () => TelaCadastro()),
         GetPage(name: RotasProjeto.TELA_INICIAL, page: () => TelaInicial()),
         GetPage(name: RotasProjeto.TELA_PERFIL, page: () => TelaPerfil()),
+        GetPage(name: RotasProjeto.TELA_CADASTRO_SERVICO, page: () => CadastroServico()),
+        
       ],
       home: TelaLogin(),
     );
