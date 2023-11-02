@@ -1,6 +1,8 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../componente/FlushBarComponente.dart';
+import '../http/adicionarLogin.dart';
 
 class TelaCadastro extends StatefulWidget {
   @override
@@ -19,7 +21,7 @@ class _TelaCadastroState extends State<TelaCadastro> {
       backgroundColor: Colors.black,
       body: Column(
         children: [
-                    Container(
+          Container(
             alignment: Alignment.topLeft,
             padding: EdgeInsets.all(16),
             child: IconButton(
@@ -35,7 +37,6 @@ class _TelaCadastroState extends State<TelaCadastro> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
@@ -105,7 +106,9 @@ class _TelaCadastroState extends State<TelaCadastro> {
                       ),
                       suffixIcon: IconButton(
                         icon: Icon(
-                          _senhaVisivel ? Icons.visibility : Icons.visibility_off,
+                          _senhaVisivel
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                           color: Colors.orange,
                         ),
                         onPressed: () {
@@ -119,8 +122,18 @@ class _TelaCadastroState extends State<TelaCadastro> {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {
-
+                onPressed: () async {
+                  var retorno = AdicionarLoginHttp.adicionaLogin(
+                      _nomeController.text,
+                      _emailController.text,
+                      _senhaController.text);
+                  if (retorno == true) {
+                    FlushBarComponente.mostrar(
+                                context, "Cadastrado com sucesso!", Icons.check, Color.fromARGB(255, 64, 223, 15));
+                  } else {
+                    FlushBarComponente.mostrar(
+                     context, "Não foi possivel realizar o Cadastro!", Icons.close, Color.fromARGB(255, 223, 12, 12));
+                  }
                 },
                 child: Text(
                   'Cadastrar',

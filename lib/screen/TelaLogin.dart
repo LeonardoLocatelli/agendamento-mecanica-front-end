@@ -1,9 +1,9 @@
+import 'package:agendamento_mecanica/http/adicionarLogin.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../RotasProjeto.dart';
-
-
+import '../componente/FlushBarComponente.dart';
 
 class TelaLogin extends StatefulWidget {
   @override
@@ -86,8 +86,18 @@ class _TelaLoginState extends State<TelaLogin> {
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                    Get.toNamed(RotasProjeto.TELA_INICIAL);
+              onPressed: () async {
+                var retorno = await AdicionarLoginHttp.logar(
+                    _emailController.text, _senhaController.text);
+                if (retorno == true) {
+                  Get.toNamed(RotasProjeto.TELA_INICIAL);
+                } else {
+                  FlushBarComponente.mostrar(
+                      context,
+                      "Email ou senha estão incorretos!",
+                      Icons.close,
+                      Color.fromARGB(255, 223, 12, 12));
+                }
               },
               child: Text(
                 'Login',
@@ -100,7 +110,7 @@ class _TelaLoginState extends State<TelaLogin> {
             SizedBox(height: 20),
             TextButton(
               onPressed: () {
-                 Get.toNamed(RotasProjeto.TELA_CADASTRO);
+                Get.toNamed(RotasProjeto.TELA_CADASTRO);
               },
               child: Text(
                 'Cadastrar',
