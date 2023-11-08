@@ -20,104 +20,116 @@ class _TelaLoginState extends State<TelaLogin> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SizedBox(height: 40),
-            const Text(
-              'Login',
-              style: TextStyle(
-                color: Colors.orange,
-                fontSize: 36,
-              ),
-            ),
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.3,
-                child: TextFormField(
-                  controller: _emailController,
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    labelStyle: TextStyle(color: Colors.orange),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.orange),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.orange),
-                    ),
+        child: Material(
+          borderRadius: BorderRadiusDirectional.circular(5),
+          elevation: 5,
+          color: Color.fromARGB(88, 95, 95, 95),
+          child: Container(
+            margin: EdgeInsets.all(20),
+            width: 600,
+            height: 400,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(height: 40),
+                const Text(
+                  'Login',
+                  style: TextStyle(
+                    color: Colors.orange,
+                    fontSize: 36,
                   ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                width: MediaQuery.of(context).size.width * 0.3,
-                child: TextFormField(
-                  controller: _senhaController,
-                  style: TextStyle(color: Colors.white),
-                  obscureText: !_senhaVisivel,
-                  decoration: InputDecoration(
-                    labelText: 'Senha',
-                    labelStyle: TextStyle(color: Colors.orange),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.orange),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.orange),
-                    ),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _senhaVisivel ? Icons.visibility : Icons.visibility_off,
-                        color: Colors.orange,
+                SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    child: TextFormField(
+                      controller: _emailController,
+                      style: TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        labelStyle: TextStyle(color: Colors.orange),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange),
+                        ),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          _senhaVisivel = !_senhaVisivel;
-                        });
-                      },
                     ),
                   ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.3,
+                    child: TextFormField(
+                      controller: _senhaController,
+                      style: TextStyle(color: Colors.white),
+                      obscureText: !_senhaVisivel,
+                      decoration: InputDecoration(
+                        labelText: 'Senha',
+                        labelStyle: TextStyle(color: Colors.orange),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.orange),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _senhaVisivel
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: Colors.orange,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _senhaVisivel = !_senhaVisivel;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    var retorno = await AdicionarLoginHttp.logar(
+                        _emailController.text, _senhaController.text);
+                    if (retorno == true) {
+                      Get.toNamed(RotasProjeto.TELA_INICIAL);
+                    } else {
+                      FlushBarComponente.mostrar(
+                          context,
+                          "Email ou senha estão incorretos!",
+                          Icons.close,
+                          Color.fromARGB(255, 223, 12, 12));
+                    }
+                  },
+                  child: Text(
+                    'Login',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.orange,
+                  ),
+                ),
+                SizedBox(height: 20),
+                TextButton(
+                  onPressed: () {
+                    Get.toNamed(RotasProjeto.TELA_CADASTRO);
+                  },
+                  child: Text(
+                    'Cadastrar',
+                    style: TextStyle(color: Colors.orange),
+                  ),
+                ),
+              ],
             ),
-            ElevatedButton(
-              onPressed: () async {
-                var retorno = await AdicionarLoginHttp.logar(
-                    _emailController.text, _senhaController.text);
-                if (retorno == true) {
-                  Get.toNamed(RotasProjeto.TELA_INICIAL);
-                } else {
-                  FlushBarComponente.mostrar(
-                      context,
-                      "Email ou senha estão incorretos!",
-                      Icons.close,
-                      Color.fromARGB(255, 223, 12, 12));
-                }
-              },
-              child: Text(
-                'Login',
-                style: TextStyle(color: Colors.white),
-              ),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.orange,
-              ),
-            ),
-            SizedBox(height: 20),
-            TextButton(
-              onPressed: () {
-                Get.toNamed(RotasProjeto.TELA_CADASTRO);
-              },
-              child: Text(
-                'Cadastrar',
-                style: TextStyle(color: Colors.orange),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

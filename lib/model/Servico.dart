@@ -1,27 +1,46 @@
 import 'dart:convert';
 
 class Servico {
-  String dataEntrada;
-  String nomeCarro;
-  int ano;
+  String id;
+  String dono;
   String cpf;
   String telefone;
+  String marca;
+  int ano;
   String modelo;
-  String nomeDono;
-  String descricaoProblema;
-  String dataPrevisaoSaida;
-  String mecanicoEncarregado;
+  String problema;
+  String mecanico;
+  String dataEntrada;
+  String dataSaida;
 
   Servico({
+    required this.id,
     required this.dataEntrada,
-    required this.nomeCarro,
+    required this.marca,
     required this.ano,
     required this.cpf,
     required this.telefone,
     required this.modelo,
-    required this.nomeDono,
-    required this.descricaoProblema,
-    required this.dataPrevisaoSaida,
-    required this.mecanicoEncarregado,
+    required this.dono,
+    required this.problema,
+    required this.dataSaida,
+    required this.mecanico,
   });
+
+factory Servico.fromJson(Map<String, dynamic> json) {
+  return Servico(
+    id: json['id'],
+    dataEntrada: json['dataEntrada'],
+    marca: json['marca'],
+    ano: json['ano'],
+    cpf: json['cpf'],
+    telefone: json['telefone'],
+    modelo: json['modelo'],
+    dono: json['dono'],
+    problema: json['problema'],
+    dataSaida: json['dataSaida'],
+    mecanico: json['mecanico'],
+  );
+}
+
 }

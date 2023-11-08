@@ -1,9 +1,13 @@
+import 'dart:js';
+
 import 'package:agendamento_mecanica/http/servicoHttp.dart';
+import 'package:agendamento_mecanica/screen/TelaLogin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../RotasProjeto.dart';
+import '../componente/FlushBarComponente.dart';
 import '../model/Servico.dart';
 
 class TelaInicial extends StatefulWidget {
@@ -12,6 +16,33 @@ class TelaInicial extends StatefulWidget {
 }
 
 class _TelaInicialState extends State<TelaInicial> {
+  List<Servico> servicos = [];
+
+  @override
+  void initState() {
+    super.initState();
+    buscaListaServicos();
+  }
+
+  atualizaListaServicos() {
+    setState(() {
+      servicos;
+    });
+  }
+
+  Future<void> buscaListaServicos() async {
+    try {
+      final listaServicos = await cadastraServicoHttp.buscaListaServico();
+      if (listaServicos != null) {
+        setState(() {
+          servicos = listaServicos;
+        });
+      }
+    } catch (exception) {
+      print("Erro ao buscar a lista de serviços: $exception");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,13 +58,13 @@ class _TelaInicialState extends State<TelaInicial> {
           ),
         ),
       ),
-      body: FoodItemList(),
+      body: FoodItemList(servicos),
       bottomNavigationBar: BottomNavBar(),
     );
   }
 }
 
-FoodItemList() {
+FoodItemList(List<Servico> servicos) {
   return FutureBuilder<List<Servico>>(
     future: cadastraServicoHttp.buscaListaServico(),
     builder: (context, snapshot) {
@@ -43,14 +74,13 @@ FoodItemList() {
         return Center(child: Text('Erro: ${snapshot.error}'));
       } else {
         final servicos = snapshot.data;
-
         return GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 5,
           ),
           itemCount: servicos?.length,
           itemBuilder: (context, index) {
-            return MyCard(servico: servicos![index]);
+            return MyCard(context, servico: servicos![index]);
           },
         );
       }
@@ -58,24 +88,26 @@ FoodItemList() {
   );
 }
 
-
 BottomNavBar() {
   return BottomAppBar(
+    color: Colors.orange,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        IconButton(
-          icon: Icon(Icons.add_reaction),
-          onPressed: () {},
-        ),
+        // IconButton(
+        //   icon: Icon(Icons.add_reaction),
+        //   onPressed: () {},
+        // ),
         IconButton(
           icon: Icon(Icons.add),
+          tooltip: "Cadastrar Servico",
           onPressed: () {
             Get.toNamed(RotasProjeto.TELA_CADASTRO_SERVICO);
           },
         ),
         IconButton(
           icon: Icon(Icons.person),
+          tooltip: "Perfil",
           onPressed: () {
             Get.toNamed(RotasProjeto.TELA_PERFIL);
           },
@@ -85,14 +117,14 @@ BottomNavBar() {
   );
 }
 
-MyCard({required Servico servico}) {
+Widget MyCard(BuildContext context, {required Servico servico}) {
   return Card(
     margin: EdgeInsets.all(4),
     elevation: 5,
     child: Container(
-      color: Colors.white,
-      width: 600,
-      height: 800,
+      width: MediaQuery.of(context).size.width * 0.6,
+      height: MediaQuery.of(context).size.height * 0.10,
+      color: Color.fromARGB(255, 151, 151, 151),
       child: Row(
         children: [
           Padding(
@@ -109,11 +141,11 @@ MyCard({required Servico servico}) {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  'Data de Entrada: ${servico.dataEntrada}',
+                  'Nome do Dono: ${servico.dono}',
                   style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
                 Text(
-                  'Nome do Carro: ${servico.nomeCarro}',
+                  'Carro: ${servico.marca}',
                   style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
                 Text(
@@ -125,22 +157,41 @@ MyCard({required Servico servico}) {
                   style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
                 Text(
-                  'Nome do Dono: ${servico.nomeDono}',
+                  'Problema: ${servico.problema}',
                   style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
                 Text(
-                  'Descrição do Problema: ${servico.descricaoProblema}',
+                  'Data de Entrada: ${servico.dataEntrada}',
                   style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
                 Text(
-                  'Data de Previsão de Saída: ${servico.dataPrevisaoSaida}',
+                  'Previsão de Saída: ${servico.dataSaida}',
                   style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
                 Text(
-                  'Mecânico Encarregado: ${servico.mecanicoEncarregado}',
+                  'Mecânico Encarregado: ${servico.mecanico}',
                   style: TextStyle(fontSize: 16, color: Colors.black),
                 ),
               ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () async {
+              var retorno =
+                  await cadastraServicoHttp.excluirServico(servico.id);
+              if (retorno == true) {
+                
+              } else {
+                FlushBarComponente.mostrar(
+                    context,
+                    "Não foi possivel excluir serviço",
+                    Icons.close,
+                    Color.fromARGB(255, 223, 12, 12));
+              }
+            },
+            child: Icon(
+              Icons.delete,
+              color: Colors.red,
             ),
           ),
         ],
