@@ -1,9 +1,15 @@
+import 'package:agendamento_mecanica/http/clienteHttp.dart';
 import 'package:agendamento_mecanica/http/servicoHttp.dart';
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../RotasProjeto.dart';
 import '../componente/FlushBarComponente.dart';
+import '../http/mecanicoHttp.dart';
+import '../model/Cliente.dart';
+import '../model/Mecanico.dart';
 
 class TelaCadastroServico extends StatefulWidget {
   @override
@@ -19,9 +25,12 @@ class _TelaCadastroServicoState extends State<TelaCadastroServico> {
   TextEditingController anoController = TextEditingController();
   TextEditingController modeloController = TextEditingController();
   TextEditingController descricaoProblemaController = TextEditingController();
-  TextEditingController mecanicoController = TextEditingController();
   TextEditingController dataEntradaController = TextEditingController();
   TextEditingController dataPrevisaoSaidaController = TextEditingController();
+  List<Mecanico> listaDeMecanicos = [];
+  List<Cliente> listaDeClientes = [];
+  String? selectedMecanico;
+  String? selectedCliente;
 
   @override
   void dispose() {
@@ -32,7 +41,6 @@ class _TelaCadastroServicoState extends State<TelaCadastroServico> {
     anoController.dispose();
     modeloController.dispose();
     descricaoProblemaController.dispose();
-    mecanicoController.dispose();
     dataEntradaController.dispose();
     dataPrevisaoSaidaController.dispose();
     super.dispose();
@@ -46,9 +54,40 @@ class _TelaCadastroServicoState extends State<TelaCadastroServico> {
     anoController.clear();
     modeloController.clear();
     descricaoProblemaController.clear();
-    mecanicoController.clear();
     dataEntradaController.clear();
     dataPrevisaoSaidaController.clear();
+  }
+
+  void initState() {
+    super.initState();
+    buscaListaMecanicos();
+    buscaListaCliente();
+  }
+
+  Future<void> buscaListaMecanicos() async {
+    try {
+      final listaMecanicos = await MecanicoHttp.buscaListaMecanico();
+      if (listaMecanicos != null) {
+        setState(() {
+          listaDeMecanicos = listaMecanicos;
+        });
+      }
+    } catch (exception) {
+      print("Erro ao buscar a lista de serviços: $exception");
+    }
+  }
+
+  Future<void> buscaListaCliente() async {
+    try {
+      final listaClientes = await ClienteHttp.buscarListaCliente();
+      if (listaClientes != null) {
+        setState(() {
+          listaDeClientes = listaClientes;
+        });
+      }
+    } catch (exception) {
+      print("Erro ao buscar a lista de clientes: $exception");
+    }
   }
 
   @override
@@ -89,127 +128,194 @@ class _TelaCadastroServicoState extends State<TelaCadastroServico> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      TextFormField(
-                        style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          labelText: 'Nome do dono do carro',
-                          labelStyle: TextStyle(color: Colors.orange),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(0, 95, 95, 95),
+                          border: Border.all(
+                            color: Colors.orange,
+                            width: 1,
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
+                          borderRadius: BorderRadius.circular(3),
                         ),
-                        controller: nomeDonoCarroController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Por favor, insira o nome do dono do carro';
-                          }
-                          return null;
-                        },
+                        child: DropdownButton<String>(
+                          icon: Icon(Icons.arrow_drop_down),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.orange),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.transparent,
+                          ),
+                          dropdownColor: Color.fromARGB(255, 41, 41, 41),
+                          value: selectedCliente,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedCliente = newValue;
+                              if (newValue != null) {
+                                Cliente selectedClient =
+                                    listaDeClientes.firstWhere(
+                                        (cliente) => cliente.dono == newValue);
+                                nomeDonoCarroController.text =
+                                    selectedClient.dono;
+                                cpfController.text = selectedClient.cpf;
+                                telefoneController.text =
+                                    selectedClient.telefone;
+                                marcaCarroController.text =
+                                    selectedClient.marca;
+                                anoController.text =
+                                    selectedClient.ano.toString();
+                                modeloController.text = selectedClient.modelo;
+                              }
+                            });
+                          },
+                          items: [
+                            DropdownMenuItem<String>(
+                              value: null,
+                              child: Text(
+                                'Selecione um cliente',
+                                style: TextStyle(color: Colors.orange),
+                              ),
+                            ),
+                            ...listaDeClientes.map<DropdownMenuItem<String>>(
+                                (Cliente cliente) {
+                              return DropdownMenuItem<String>(
+                                value: cliente.dono,
+                                child: Text(cliente.dono,
+                                    style: TextStyle(color: Colors.orange)),
+                              );
+                            }).toList(),
+                          ],
+                        ),
                       ),
-                      TextFormField(
-                        style: TextStyle(color: Colors.white),
-                        controller: cpfController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: 'CPF',
-                          labelStyle: TextStyle(color: Colors.orange),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
+                      if (selectedCliente != null)
+                        Column(
+                          children: [
+                            SizedBox(height: 20),
+                            TextFormField(
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                labelText: 'CPF',
+                                labelStyle: TextStyle(color: Colors.orange),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
+                              ),
+                              controller: cpfController,
+                              enabled: false,
+                            ),
+                            SizedBox(height: 20),
+                            TextFormField(
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                labelText: 'Telefone',
+                                labelStyle: TextStyle(color: Colors.orange),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
+                              ),
+                              controller: telefoneController,
+                              enabled: false,
+                            ),
+                            SizedBox(height: 20),
+                            TextFormField(
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                labelText: 'Marca do carro',
+                                labelStyle: TextStyle(color: Colors.orange),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
+                              ),
+                              controller: marcaCarroController,
+                              enabled: false,
+                            ),
+                            SizedBox(height: 20),
+                            TextFormField(
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                labelText: 'Modelo do carro',
+                                labelStyle: TextStyle(color: Colors.orange),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
+                              ),
+                              controller: modeloController,
+                              enabled: false,
+                            ),
+                            SizedBox(height: 20),
+                            TextFormField(
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                labelText: 'Ano do carro',
+                                labelStyle: TextStyle(color: Colors.orange),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
+                              ),
+                              controller: anoController,
+                              enabled: false,
+                            ),
+                          ],
                         ),
-                        validator: (value) {
-                          if (cpfController.text.isEmpty) {
-                            return 'Por favor, insira o CPF';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        style: TextStyle(color: Colors.white),
-                        controller: telefoneController,
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          labelText: 'Telefone',
-                          labelStyle: TextStyle(color: Colors.orange),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Color.fromARGB(0, 95, 95, 95),
+                          border: Border.all(
+                            color: Colors.orange,
+                            width: 1,
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
+                          borderRadius: BorderRadius.circular(3),
                         ),
-                        validator: (value) {
-                          if (telefoneController.text.isEmpty) {
-                            return 'Por favor, insira o telefone';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          labelText: 'Marca do carro',
-                          labelStyle: TextStyle(color: Colors.orange),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
+                        child: DropdownButton<String>(
+                          value: selectedMecanico,
+                          icon: Icon(Icons.arrow_drop_down),
+                          iconSize: 24,
+                          elevation: 16,
+                          style: TextStyle(color: Colors.orange),
+                          underline: Container(
+                            height: 2,
+                            color: Colors.transparent,
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedMecanico = newValue!;
+                            });
+                          },
+                          dropdownColor: Color.fromARGB(255, 41, 41, 41),
+                          items: [
+                            DropdownMenuItem<String>(
+                              value: null,
+                              child: Text("Selecione um mecânico"),
+                            ),
+                            ...listaDeMecanicos.map<DropdownMenuItem<String>>(
+                              (Mecanico mecanico) {
+                                return DropdownMenuItem<String>(
+                                  value: mecanico.nome,
+                                  child: Text(mecanico.nome),
+                                );
+                              },
+                            ).toList(),
+                          ],
                         ),
-                        controller: marcaCarroController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Por favor, insira a marca do carro';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          labelText: 'Ano',
-                          labelStyle: TextStyle(color: Colors.orange),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                        ),
-                        controller: anoController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Por favor, insira o ano do carro';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          labelText: 'Modelo',
-                          labelStyle: TextStyle(color: Colors.orange),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                        ),
-                        controller: modeloController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Por favor, insira o modelo do carro';
-                          }
-                          return null;
-                        },
                       ),
                       TextFormField(
                         style: TextStyle(color: Colors.white),
@@ -233,26 +339,10 @@ class _TelaCadastroServicoState extends State<TelaCadastroServico> {
                       ),
                       TextFormField(
                         style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          labelText: 'Mecânico',
-                          labelStyle: TextStyle(color: Colors.orange),
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                        ),
-                        controller: mecanicoController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Por favor, insira o nome do mecânico';
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        style: TextStyle(color: Colors.white),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          DataInputFormatter()
+                        ],
                         decoration: InputDecoration(
                           labelText: 'Data de Entrada',
                           labelStyle: TextStyle(color: Colors.orange),
@@ -273,6 +363,10 @@ class _TelaCadastroServicoState extends State<TelaCadastroServico> {
                       ),
                       TextFormField(
                         style: TextStyle(color: Colors.white),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          DataInputFormatter()
+                        ],
                         decoration: InputDecoration(
                           labelText: 'Data de Previsão de Saída',
                           labelStyle: TextStyle(color: Colors.orange),
@@ -305,7 +399,7 @@ class _TelaCadastroServicoState extends State<TelaCadastroServico> {
                               int.parse(anoController.text),
                               modeloController.text,
                               descricaoProblemaController.text,
-                              mecanicoController.text,
+                              selectedMecanico!,
                               dataEntradaController.text,
                               dataPrevisaoSaidaController.text,
                             );

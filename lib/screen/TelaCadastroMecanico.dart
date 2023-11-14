@@ -1,5 +1,7 @@
 import 'package:agendamento_mecanica/http/mecanicoHttp.dart';
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../RotasProjeto.dart';
@@ -100,6 +102,10 @@ class _TelaCadastroMecanicoState extends State<TelaCadastroMecanico> {
                     TextFormField(
                       controller: telefoneController,
                       style: TextStyle(color: Colors.white),
+                      inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                         TelefoneInputFormatter()
+                        ],
                       decoration: InputDecoration(
                         labelText: 'Telefone',
                         labelStyle: TextStyle(color: Colors.orange),
@@ -121,6 +127,10 @@ class _TelaCadastroMecanicoState extends State<TelaCadastroMecanico> {
                     TextFormField(
                       controller: cpfController,
                       style: TextStyle(color: Colors.white),
+                      inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                         CpfInputFormatter()
+                        ],
                       decoration: InputDecoration(
                         labelText: 'CPF',
                         labelStyle: TextStyle(color: Colors.orange),
@@ -142,6 +152,10 @@ class _TelaCadastroMecanicoState extends State<TelaCadastroMecanico> {
                     TextFormField(
                       controller: salarioController,
                       style: TextStyle(color: Colors.white),
+                      inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                         RealInputFormatter()
+                        ],
                       decoration: InputDecoration(
                         labelText: 'Salário',
                         labelStyle: TextStyle(color: Colors.orange),

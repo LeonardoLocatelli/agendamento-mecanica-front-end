@@ -38,6 +38,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.13.6
   another_flushbar: ^1.12.30
+  brasil_fields: ^1.12.0
 
 dev_dependencies:
   flutter_test:

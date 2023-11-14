@@ -6,4 +6,5 @@ class RotasProjeto {
   static const TELA_PERFIL = '/tela_perfil';
   static const TELA_CADASTRO_SERVICO = '/tela_cadastro_servico';
   static const TELA_CADASTRO_MECANICO = '/tela_cadastro_mecanico';
+  static const TELA_CADASTRO_CLIENTE = '/tela_cadastro_cliente';
 }

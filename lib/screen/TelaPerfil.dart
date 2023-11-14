@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../RotasProjeto.dart';
+import '../componente/FlushBarComponente.dart';
 import '../model/Mecanico.dart';
 
 class TelaPerfil extends StatefulWidget {
@@ -116,27 +117,62 @@ class _TelaPerfilState extends State<TelaPerfil> {
                                   color: Color.fromARGB(255, 139, 139, 139),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: [
-                                    Text(
-                                      "Nome: ${mecanico.nome}",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                      ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Nome: ${mecanico.nome}",
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        Text(
+                                          "Telefone: ${mecanico.telefone ?? 'Não informado'}",
+                                          style:
+                                              TextStyle(color: Colors.black),
+                                        ),
+                                        Text(
+                                          "CPF: ${mecanico.cpf ?? 'Não informado'}",
+                                          style:
+                                              TextStyle(color: Colors.black),
+                                        ),
+                                        Text(
+                                          "Salário: ${mecanico.salario?.toString() ?? 'Não informado'}",
+                                          style:
+                                              TextStyle(color: Colors.black),
+                                        ),
+                                      ],
                                     ),
-                                    Text(
-                                      "Telefone: ${mecanico.telefone ?? 'Não informado'}",
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    Text(
-                                      "CPF: ${mecanico.cpf ?? 'Não informado'}",
-                                      style: TextStyle(color: Colors.black),
-                                    ),
-                                    Text(
-                                      "Salário: ${mecanico.salario?.toString() ?? 'Não informado'}",
-                                      style: TextStyle(color: Colors.black),
-                                    ),
+                                    IconButton(
+                                        onPressed: () async {
+                                          var retorno = await MecanicoHttp
+                                              .excluirMecanico(mecanico.nome);
+                                          if (retorno == true) {
+                                            FlushBarComponente.mostrar(
+                                                context,
+                                                "Mecanico adicionado com sucesso!",
+                                                Icons.close,
+                                                Color.fromARGB(
+                                                    255, 223, 12, 12));
+                                            atualizaListaMecanicos();
+                                          } else {
+                                            FlushBarComponente.mostrar(
+                                                context,
+                                                "Não foi possivel excluir mecanico",
+                                                Icons.close,
+                                                Color.fromARGB(
+                                                    255, 223, 12, 12));
+                                          }
+                                        },
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        )),
                                   ],
                                 ),
                               );
