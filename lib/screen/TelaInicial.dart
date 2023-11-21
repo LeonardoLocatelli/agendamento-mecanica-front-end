@@ -1,8 +1,6 @@
 import 'dart:js';
 
 import 'package:agendamento_mecanica/http/servicoHttp.dart';
-import 'package:agendamento_mecanica/screen/TelaLogin.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,6 +15,9 @@ class TelaInicial extends StatefulWidget {
 
 class _TelaInicialState extends State<TelaInicial> {
   List<Servico> servicos = [];
+
+  List<String> estadosFiltro = ['ANDAMENTO', 'CONCLUIDO', 'TODOS'];
+  String estadoFiltroSelecionado = 'TODOS';
 
   @override
   void initState() {
@@ -48,16 +49,40 @@ class _TelaInicialState extends State<TelaInicial> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.orange,
-        title: Text(
-          "Lista de serviços",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 36,
-          ),
+  automaticallyImplyLeading: false,
+  backgroundColor: Colors.orange,
+  title: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(
+        "Lista de serviços",
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 20,
         ),
       ),
+      DropdownButton<String>(
+        value: estadoFiltroSelecionado,
+        onChanged: (value) {
+          setState(() {
+            estadoFiltroSelecionado = value!;
+          });
+        },
+        items: estadosFiltro
+            .map<DropdownMenuItem<String>>((String value) {
+          return DropdownMenuItem<String>(
+            value: value,
+            child: Text(
+              value,
+              style: TextStyle(color: Colors.black),
+            ),
+          );
+        }).toList(),
+      ),
+    ],
+  ),
+),
+
       body: FoodItemList(servicos),
       bottomNavigationBar: BottomNavBar(),
     );
@@ -65,117 +90,136 @@ class _TelaInicialState extends State<TelaInicial> {
 
   Widget MyCard(BuildContext context, {required Servico servico}) {
     return Card(
-      margin: EdgeInsets.all(4),
+
+      margin: EdgeInsets.all(8),
       elevation: 5,
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.6,
-        height: MediaQuery.of(context).size.height * 0.10,
-        color: Color.fromARGB(255, 151, 151, 151),
-        child: Row(
+      child: ListTile(
+        contentPadding: EdgeInsets.all(16),
+        leading: Image.asset(
+          'assets/car_image.jpg',
+          width: 80,
+          height: 80,
+        ),
+        title: Text(
+          'Dono: ${servico.dono}',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                'assets/car_image.jpg',
-                width: 100,
-                height: 100,
+            Text(
+              'Telefone: ${servico.telefone}',
+              style: TextStyle(fontSize: 16),
+            ),
+            Text(
+              'CPF: ${servico.cpf}',
+              style: TextStyle(fontSize: 16),
+            ),
+            Text(
+              'Carro: ${servico.marca}',
+              style: TextStyle(fontSize: 16),
+            ),
+            Text(
+              'Modelo: ${servico.modelo}',
+              style: TextStyle(fontSize: 16),
+            ),
+            Text(
+              'Ano: ${servico.ano}',
+              style: TextStyle(fontSize: 16),
+            ),
+            Text(
+              'Problema: ${servico.problema}',
+              style: TextStyle(fontSize: 16),
+            ),
+            Text(
+              'Data de Entrada: ${servico.dataEntrada}',
+              style: TextStyle(fontSize: 16),
+            ),
+            Text(
+              'Previsão de Saída: ${servico.dataSaida}',
+              style: TextStyle(fontSize: 16),
+            ),
+            Text(
+              'Mecânico: ${servico.mecanico}',
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              onPressed: () async {
+                var retorno =
+                    await cadastraServicoHttp.excluirServico(servico.id);
+                if (retorno == true) {
+                  atualizaListaServicos();
+                } else {
+                  FlushBarComponente.mostrar(
+                    context,
+                    "Não foi possível excluir serviço",
+                    Icons.close,
+                    Color.fromARGB(255, 223, 12, 12),
+                  );
+                }
+              },
+              icon: Icon(
+                Icons.delete,
+                color: Colors.red,
               ),
             ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    'Nome do Dono: ${servico.dono}',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                  Text(
-                    'Carro: ${servico.marca}',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                  Text(
-                    'Ano: ${servico.ano}',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                  Text(
-                    'Modelo: ${servico.modelo}',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                  Text(
-                    'Problema: ${servico.problema}',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                  Text(
-                    'Data de Entrada: ${servico.dataEntrada}',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                  Text(
-                    'Previsão de Saída: ${servico.dataSaida}',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                  Text(
-                    'Mecânico Encarregado: ${servico.mecanico}',
-                    style: TextStyle(fontSize: 16, color: Colors.black),
-                  ),
-                ],
-              ),
-            ),
-            IconButton(
-                onPressed: () async {
-                  popupEdicao(context);
-                },
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.black,
-                )),
-            IconButton(
-                onPressed: () async {
-                  var retorno =
-                      await cadastraServicoHttp.excluirServico(servico.id);
-                  if (retorno == true) {
-                    atualizaListaServicos();
-                  } else {
-                    FlushBarComponente.mostrar(
-                        context,
-                        "Não foi possivel excluir serviço",
-                        Icons.close,
-                        Color.fromARGB(255, 223, 12, 12));
-                  }
-                },
-                icon: Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                )),
           ],
         ),
       ),
     );
   }
 
-  FoodItemList(List<Servico> servicos) {
-    return FutureBuilder<List<Servico>>(
-      future: cadastraServicoHttp.buscaListaServico(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Erro: ${snapshot.error}'));
-        } else {
-          final servicos = snapshot.data;
-          return GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5,
-            ),
-            itemCount: servicos?.length,
-            itemBuilder: (context, index) {
-              return MyCard(context, servico: servicos![index]);
-            },
-          );
-        }
-      },
-    );
+  void _concluirServico(Servico servico) async {
+  try {
+    var retorno = await cadastraServicoHttp.concluirServico(servico.id);
+    if (retorno == true) {
+      FlushBarComponente.mostrar(
+        context,
+        "Serviço concluído com sucesso",
+        Icons.check,
+        Colors.green,
+      );
+      atualizaListaServicos();
+    } else {
+      FlushBarComponente.mostrar(
+        context,
+        "Erro ao concluir serviço",
+        Icons.close,
+        Color.fromARGB(255, 223, 12, 12),
+      );
+    }
+  } catch (exception) {
+    print("Erro ao concluir serviço: $exception");
   }
+}
+
+Widget FoodItemList(List<Servico> servicos) {
+  List<Servico> servicosFiltrados;
+
+  if (estadoFiltroSelecionado != 'TODOS') {
+    servicosFiltrados = servicos
+        .where((servico) => servico.situacao == estadoFiltroSelecionado)
+        .toList();
+  } else {
+    servicosFiltrados = List.from(servicos);
+  }
+
+  return GridView.builder(
+    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 5,
+    ),
+    itemCount: servicosFiltrados.length,
+    itemBuilder: (context, index) {
+      return MyCard(context, servico: servicosFiltrados[index]);
+    },
+  );
+}
+
 
   BottomNavBar() {
     return BottomAppBar(
@@ -183,7 +227,7 @@ class _TelaInicialState extends State<TelaInicial> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-                    IconButton(
+          IconButton(
             icon: Icon(Icons.person_add_alt_1),
             tooltip: "Cadastrar Clientes",
             onPressed: () {
@@ -208,19 +252,5 @@ class _TelaInicialState extends State<TelaInicial> {
       ),
     );
   }
-
-  popupEdicao(BuildContext context){
-    showDialog(context, builder) {
-      Container(
-        width: MediaQuery.of(context).size.width * 0.5,
-        height: MediaQuery.of(context).size.height * 0.5,
-        child: Column(
-          children: [
-            
-
-          ],
-        )
-      );
-    }
-  }
+  
 }

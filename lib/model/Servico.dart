@@ -12,6 +12,7 @@ class Servico {
   String mecanico;
   String dataEntrada;
   String dataSaida;
+  String situacao;
 
   Servico({
     required this.id,
@@ -25,6 +26,7 @@ class Servico {
     required this.problema,
     required this.dataSaida,
     required this.mecanico,
+    required this.situacao,
   });
 
 factory Servico.fromJson(Map<String, dynamic> json) {
@@ -40,6 +42,7 @@ factory Servico.fromJson(Map<String, dynamic> json) {
     problema: json['problema'],
     dataSaida: json['dataSaida'],
     mecanico: json['mecanico'],
+    situacao: json['situacao'],
   );
 }
 

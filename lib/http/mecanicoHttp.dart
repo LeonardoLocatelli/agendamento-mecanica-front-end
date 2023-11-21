@@ -54,11 +54,14 @@ class MecanicoHttp {
   }
 
   
-  static Future<bool> excluirMecanico(String id) async {
+  static Future<bool> excluirMecanico(String nome) async {
     bool retorno;
-    try {
+          try {
       var response = await HttpPost.post(
-        url: "/api/excluirMecanico/$id"
+        url: "/api/excluirMecanico",
+        body: {
+          "mecanicoNome": nome
+          },
       );
 
       var responseData = json.decode(utf8.decode(response.bodyBytes));

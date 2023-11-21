@@ -201,6 +201,9 @@ class _TelaCadastroServicoState extends State<TelaCadastroServico> {
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.orange),
                                 ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.orange),
                                 ),
@@ -215,6 +218,9 @@ class _TelaCadastroServicoState extends State<TelaCadastroServico> {
                                 labelText: 'Telefone',
                                 labelStyle: TextStyle(color: Colors.orange),
                                 enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
+                                disabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.orange),
                                 ),
                                 focusedBorder: OutlineInputBorder(
@@ -233,6 +239,9 @@ class _TelaCadastroServicoState extends State<TelaCadastroServico> {
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.orange),
                                 ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.orange),
                                 ),
@@ -249,6 +258,9 @@ class _TelaCadastroServicoState extends State<TelaCadastroServico> {
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.orange),
                                 ),
+                                disabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.orange),
                                 ),
@@ -263,6 +275,9 @@ class _TelaCadastroServicoState extends State<TelaCadastroServico> {
                                 labelText: 'Ano do carro',
                                 labelStyle: TextStyle(color: Colors.orange),
                                 enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.orange),
+                                ),
+                                disabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: Colors.orange),
                                 ),
                                 focusedBorder: OutlineInputBorder(

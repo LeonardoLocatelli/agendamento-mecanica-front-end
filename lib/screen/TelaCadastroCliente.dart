@@ -28,7 +28,7 @@ class _TelaCadastroClienteState extends State<TelaCadastroCliente> {
   TextEditingController marcaCarroController = TextEditingController();
   TextEditingController anoController = TextEditingController();
   TextEditingController modeloController = TextEditingController();
-  TextEditingController descricaoProblemaController = TextEditingController();
+
 
 
   @override
@@ -39,7 +39,6 @@ class _TelaCadastroClienteState extends State<TelaCadastroCliente> {
     marcaCarroController.dispose();
     anoController.dispose();
     modeloController.dispose();
-    descricaoProblemaController.dispose();
     super.dispose();
   }
 
@@ -50,7 +49,6 @@ class _TelaCadastroClienteState extends State<TelaCadastroCliente> {
     marcaCarroController.clear();
     anoController.clear();
     modeloController.clear();
-    descricaoProblemaController.clear();
   }
 
   @override

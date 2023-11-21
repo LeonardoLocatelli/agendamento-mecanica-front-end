@@ -8,7 +8,6 @@ class Cliente {
   String marca;
   int ano;
   String modelo;
-  String problema;
 
   Cliente({
     required this.id,
@@ -18,7 +17,6 @@ class Cliente {
     required this.telefone,
     required this.modelo,
     required this.dono,
-    required this.problema,
   });
 
   factory Cliente.fromJson(Map<String, dynamic> json) {
@@ -30,7 +28,6 @@ class Cliente {
       telefone: json['telefone'],
       modelo: json['modelo'],
       dono: json['dono'],
-      problema: json['problema'],
     );
   }
 
@@ -43,7 +40,6 @@ class Cliente {
       'telefone': telefone,
       'modelo': modelo,
       'dono': dono,
-      'problema': problema,
     };
   }
 }
