@@ -89,4 +89,23 @@ class cadastraServicoHttp {
       rethrow;
     }
   }
+
+    static Future<bool> alteraSituacaoServico(String id) async {
+    bool retorno;
+    try {
+      var response = await HttpPost.post(
+        url: "/api/alteraSituacaoServico/$id"
+      );
+      var responseData = json.decode(utf8.decode(response.bodyBytes));
+      if (responseData['statusCode'] == 200) {
+        retorno = true;
+      } else {
+        retorno = false;
+      }
+
+      return retorno;
+    } catch (exception) {
+      rethrow;
+    }
+  }
 }

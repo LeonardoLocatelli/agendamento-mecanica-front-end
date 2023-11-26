@@ -1,3 +1,4 @@
+import 'package:agendamento_mecanica/http/adicionarLogin.dart';
 import 'package:agendamento_mecanica/http/clienteHttp.dart';
 import 'package:agendamento_mecanica/http/mecanicoHttp.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +19,29 @@ class _TelaPerfilState extends State<TelaPerfil> {
   bool mostrarListaDeClientes = false;
   List<Mecanico> listaDeMecanicos = [];
   List<Cliente> listaDeClientes = [];
+  String email = "";
+  String nome = "";
 
   @override
   void initState() {
     super.initState();
     buscaListaMecanicos();
     buscaListaDeClientes();
+    buscaPerfilMecanica();
+  }
+
+  buscaPerfilMecanica() async {
+    try {
+      var retorno = await AdicionarLoginHttp.buscaPerfilMecanica();
+      if (retorno != null) {
+        setState(() {
+          email = retorno.email;
+          nome = retorno.nome;
+        });
+      }
+    } catch (exception) {
+      print("Erro ao buscar informaçoes do perfil da mecanica: $exception");
+    }
   }
 
   atualizaListaMecanicos() {
@@ -88,21 +106,32 @@ class _TelaPerfilState extends State<TelaPerfil> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  CircleAvatar(
-                    radius: 80,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child: IconButton(
+                          tooltip: "Deslogar",
+                            onPressed: () {
+                              Get.toNamed(RotasProjeto.TELA_LOGIN);
+                            },
+                            icon: Icon(Icons.login_outlined,
+                                color: Colors.orange, size: 30)),
+                      )
+                    ],
                   ),
-                  SizedBox(height: 20),
                   Text(
-                    'Leonardo Locatelli',
+                    "Mecanica: $nome",
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       color: Colors.orange,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                   Text(
-                    'Endereço de Email: ',
+                    "Email: $email",
                     style: TextStyle(fontSize: 16, color: Colors.orange),
                   ),
                   SizedBox(height: 20),

@@ -67,7 +67,7 @@ class _TelaCadastroClienteState extends State<TelaCadastroCliente> {
           },
         ),
         title: Text(
-          'Cadastro de Serviço',
+          'Cadastro de Cliente',
           style: TextStyle(color: Colors.black),
         ),
       ),

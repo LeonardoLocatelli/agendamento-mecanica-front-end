@@ -47,6 +47,10 @@ class _TelaCadastroServicoState extends State<TelaCadastroServico> {
   }
 
   void limparFormulario() {
+    setState(() {
+      selectedCliente = null;
+      selectedMecanico = null;
+    });
     nomeDonoCarroController.clear();
     cpfController.clear();
     telefoneController.clear();

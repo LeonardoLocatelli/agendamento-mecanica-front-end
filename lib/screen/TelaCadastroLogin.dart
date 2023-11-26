@@ -11,11 +11,19 @@ class TelaCadastroLogin extends StatefulWidget {
   _TelaCadastroLoginState createState() => _TelaCadastroLoginState();
 }
 
+
 class _TelaCadastroLoginState extends State<TelaCadastroLogin> {
   final TextEditingController _nomeController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _senhaController = TextEditingController();
   bool _senhaVisivel = false;
+
+  limpaCampos(){
+  _nomeController.clear();
+  _emailController.clear();
+  _senhaController.clear();
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +140,7 @@ class _TelaCadastroLoginState extends State<TelaCadastroLogin> {
                             "Cadastrado com sucesso!",
                             Icons.check,
                             Color.fromARGB(255, 64, 223, 15));
+                            limpaCampos();
                       } else {
                         FlushBarComponente.mostrar(
                             context,
